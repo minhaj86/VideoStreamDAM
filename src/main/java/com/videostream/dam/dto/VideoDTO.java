@@ -1,6 +1,7 @@
 package com.videostream.dam.dto;
 
 import com.videostream.dam.orm.Video;
+import com.videostream.dam.orm.VideoGenre;
 import com.videostream.dam.util.MapperUtil;
 
 import java.util.ArrayList;
@@ -60,6 +61,13 @@ public class VideoDTO {
     }
 
     public Video convertToEntity() {
-        return MapperUtil.getInstance().map(this, Video.class);
+        Video video = MapperUtil.getInstance().map(this, Video.class);
+        this.getVideoGenreTitle().forEach( genreName -> {
+            VideoGenre vg = new VideoGenre();
+            vg.setTitle(genreName);
+            vg.setVideo(video);
+            video.getGenres().add(vg);
+        });
+        return video;
     }
 }

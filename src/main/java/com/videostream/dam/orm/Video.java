@@ -106,7 +106,11 @@ public class Video {
 	}
 
 	public VideoDTO convertToDto() {
-		return MapperUtil.getInstance().map(this, VideoDTO.class);
+		VideoDTO videoDTO = MapperUtil.getInstance().map(this, VideoDTO.class);
+		this.getGenres().forEach( videoGenre -> {
+			videoDTO.getVideoGenreTitle().add(videoGenre.getTitle());
+		});
+		return videoDTO;
 	}
 
 	@Override
@@ -131,5 +135,18 @@ public class Video {
     public int hashCode() {
         return Objects.hash(id, title, description, yearReleased);
     }
+
+	public void mapFromDTO(VideoDTO videoDTO) {
+		this.setDescription(videoDTO.getDescription());
+        this.setTitle(videoDTO.getTitle());
+        this.setYearReleased(videoDTO.getYearReleased());
+        this.setId(videoDTO.getId());
+		videoDTO.getVideoGenreTitle().forEach( genreName -> {
+			VideoGenre genre = new VideoGenre();
+			genre.setTitle(genreName);
+			genre.setVideo(this);
+			this.getGenres().add(genre);
+		});
+	}
 }
 

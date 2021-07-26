@@ -1,7 +1,6 @@
 package com.videostream.dam;
 
 import com.videostream.dam.dao.VideoDAO;
-import com.videostream.dam.dto.VideoDTO;
 import com.videostream.dam.orm.Video;
 import com.videostream.dam.orm.VideoGenre;
 import com.videostream.dam.resources.VideoResource;
@@ -14,11 +13,6 @@ import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
-import org.modelmapper.convention.NameTokenizers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class VideoStreamDAMApplication extends Application<VideoStreamDAMConfiguration> {
     private final HibernateBundle<VideoStreamDAMConfiguration> hibernateBundle =

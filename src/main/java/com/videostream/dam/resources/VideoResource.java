@@ -13,10 +13,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.videostream.dam.dao.VideoDAO;
 import com.videostream.dam.dto.VideoDTO;
-import com.videostream.dam.orm.Video;
 
 import io.dropwizard.hibernate.UnitOfWork;
 
@@ -40,27 +38,27 @@ public class VideoResource {
 	@GET
 	@Path("/{id}")
     @UnitOfWork
-	public Optional<Video> getVideo(@PathParam("id") long id) {
+	public Optional<VideoDTO> getVideo(@PathParam("id") long id) {
 		return videoDAO.findById(id);
 	}
 
 	@PUT
 	@Path("/{id}")
     @UnitOfWork
-	public Optional<Video> updateVideo(@PathParam("id") long id, @Valid Video video) {
+	public Optional<VideoDTO> updateVideo(@PathParam("id") long id, @Valid VideoDTO video) {
 		return videoDAO.updateById(id, video);
 	}
 
 	@DELETE
 	@Path("/{id}")
     @UnitOfWork
-	public Optional<Video> deleteVideo(@PathParam("id") long id) {
+	public Optional<VideoDTO> deleteVideo(@PathParam("id") long id) {
 		return videoDAO.deleteById(id);
 	}
 
     @GET
     @UnitOfWork
-    public List<Video> listVideos() {
+    public List<VideoDTO> listVideos() {
         return videoDAO.findAll();
     }
 

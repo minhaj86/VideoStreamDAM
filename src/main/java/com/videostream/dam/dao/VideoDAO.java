@@ -1,8 +1,6 @@
 package com.videostream.dam.dao;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.videostream.dam.dto.VideoDTO;
-import com.videostream.dam.util.MapperUtil;
 import io.dropwizard.hibernate.AbstractDAO;
 
 import org.hibernate.SessionFactory;
@@ -12,6 +10,7 @@ import com.videostream.dam.orm.Video;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 public class VideoDAO extends AbstractDAO<Video> {
@@ -19,25 +18,42 @@ public class VideoDAO extends AbstractDAO<Video> {
         super(factory);
     }
 
-    public Optional<Video> findById(Long id) {
-        return Optional.ofNullable(get(id));
+    public Optional<VideoDTO> findById(Long id) {
+        Video video = get(id);
+        return Optional.ofNullable(video.convertToDto());
     }
 
-    public Optional<Video> updateById(Long id, Video video) {
+    public Optional<VideoDTO> updateById(Long id, VideoDTO videoDTO) {
+        Video video = videoDTO.convertToEntity();
     	video.setId(id);
-    	return Optional.ofNullable(persist(video)); 
+
+        Video videoOld = get(id);
+        videoOld.getGenres().forEach( genre -> {
+            currentSession().delete(genre);
+        });
+        videoOld.getGenres().clear();
+        videoOld.mapFromDTO(videoDTO);
+        videoOld.setId(id);
+    	return Optional.ofNullable(persist(videoOld).convertToDto());
     }
 
-    public Optional<Video> deleteById(Long id) {
-    	return deleteById(id);
+    public Optional<VideoDTO> deleteById(Long id) {
+        Optional<VideoDTO> video = findById(id);
+        currentSession().delete(video.get().convertToEntity());
+    	return video;
     }
 
     public VideoDTO create(@Valid VideoDTO videoDTO) {
-        return persist(videoDTO.convertToEntity()).convertToDto();
+        Video video = persist(videoDTO.convertToEntity());
+        return video.convertToDto();
     }
 
-    public List<Video> findAll() {
-        return list(namedTypedQuery("com.videostream.dam.orm.Video.findAll"));
+    public List<VideoDTO> findAll() {
+        List<Video> videoList = list(namedTypedQuery("com.videostream.dam.orm.Video.findAll"));
+
+        return videoList.stream().map(video -> {
+            return video.convertToDto();
+        }).collect(Collectors.toList());
     }
 
 }

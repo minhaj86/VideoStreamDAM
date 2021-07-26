@@ -13,10 +13,14 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.videostream.dam.dao.VideoDAO;
+import com.videostream.dam.dto.VideoDTO;
 import com.videostream.dam.orm.Video;
 
 import io.dropwizard.hibernate.UnitOfWork;
+
+import static com.videostream.dam.util.LogUtil.*;
 
 @Path("/video")
 @Produces(MediaType.APPLICATION_JSON)
@@ -29,7 +33,7 @@ public class VideoResource {
 
     @POST
     @UnitOfWork
-    public Video createVideo(@Valid Video video) {
+    public VideoDTO createVideo(@Valid VideoDTO video) {
         return videoDAO.create(video);
     }
     

@@ -1,5 +1,8 @@
 package com.videostream.dam.orm;
 
+import com.videostream.dam.dto.VideoDTO;
+import com.videostream.dam.util.MapperUtil;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -100,6 +103,10 @@ public class Video {
 
 	public void setYearReleased(int yearReleased) {
 		this.yearReleased = yearReleased;
+	}
+
+	public VideoDTO convertToDto() {
+		return MapperUtil.getInstance().map(this, VideoDTO.class);
 	}
 
 	@Override

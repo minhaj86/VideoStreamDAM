@@ -1,11 +1,15 @@
 package com.videostream.dam.dao;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.videostream.dam.dto.VideoDTO;
+import com.videostream.dam.util.MapperUtil;
 import io.dropwizard.hibernate.AbstractDAO;
 
 import org.hibernate.SessionFactory;
 
 import com.videostream.dam.orm.Video;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,8 +32,8 @@ public class VideoDAO extends AbstractDAO<Video> {
     	return deleteById(id);
     }
 
-    public Video create(Video video) {
-        return persist(video);
+    public VideoDTO create(@Valid VideoDTO videoDTO) {
+        return persist(videoDTO.convertToEntity()).convertToDto();
     }
 
     public List<Video> findAll() {
